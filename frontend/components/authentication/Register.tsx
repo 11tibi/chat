@@ -1,8 +1,9 @@
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import classes from './register.module.css';
 import {useRouter} from 'next/router'
+import AxiosInstance from "../../utils/AxiosInstance";
 
 interface FormElements extends HTMLFormControlsCollection {
     username: HTMLFormElement,
@@ -12,6 +13,14 @@ interface FormElements extends HTMLFormControlsCollection {
 
 interface FormData extends HTMLFormElement {
     readonly elements: FormElements
+}
+
+interface SignupResponse {
+    token: string;
+    type: string;
+    id: number;
+    username: string;
+    email: string;
 }
 
 const Register = () => {
@@ -25,7 +34,12 @@ const Register = () => {
             email: e.currentTarget.elements.email.value,
             password: e.currentTarget.elements.password.value
         }
-        console.log(data)
+        AxiosInstance.post<SignupResponse>("/api/auth/signup/", data).then(response => {
+            localStorage.setItem("access_token", response.data.token);
+            router.push("/auth/login/");
+        }).catch(error => {
+            console.error(error.reason);
+        });
     }
 
     return (
