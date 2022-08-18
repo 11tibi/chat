@@ -48,7 +48,7 @@ const Register = () => {
                 <div className={"container w-50 card shadow-2-strong"} style={{borderRadius: "1rem"}}>
                     <div className="row">
                         <h3 className={"text-center my-5"}>
-                            Login
+                            Create an account
                         </h3>
                     </div>
                     <form onSubmit={handleSubmit} className={classes.form}>
