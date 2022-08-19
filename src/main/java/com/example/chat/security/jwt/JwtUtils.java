@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtUtils {
@@ -18,6 +19,9 @@ public class JwtUtils {
     @Value("${example.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    @Value("${example.jwtRefreshExpirationDateInMs}")
+    private int jwtRefreshExpirationDate;
+
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
@@ -26,6 +30,13 @@ public class JwtUtils {
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+    }
+
+    public String generateRefreshToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationDate))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+
     }
 
     public String getUserNameFromJwtToken(String token) {
