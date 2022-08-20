@@ -1,15 +1,15 @@
 package com.example.chat.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
 @Data
 public class User {
-    // https://medium.com/javarevisited/lets-implement-jwt-based-authentication-in-spring-boot-7ea5e97fc1f2
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,6 +25,12 @@ public class User {
 
     @Column(unique = true)
     private String imageUrl;
+
+    @OneToMany(mappedBy = "id")
+    private Set<Messages> sender = new HashSet<>();
+
+    @OneToMany(mappedBy = "id")
+    private Set<Messages> receiver = new HashSet<>();
 
     public User(String email, String password, String username) {
         this.email = email;
