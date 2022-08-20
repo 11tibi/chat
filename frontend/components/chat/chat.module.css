@@ -1,0 +1,22 @@
+.background {
+    background-color: #efefef;
+    height: 100vh;
+}
+
+.scrollable {
+    overflow-y: scroll;
+}
+
+.scrollable::-webkit-scrollbar {
+    width: 10px;
+    height: 12px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background: rgb(193 193 193);
+    border-radius: 25px;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
