@@ -8,12 +8,11 @@ import com.example.chat.payload.response.MessageResponse;
 import com.example.chat.repository.UserRepository;
 import com.example.chat.security.jwt.JwtUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.example.chat.security.services.UserDetailsImpl;
-import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import io.jsonwebtoken.impl.DefaultClaims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/auth/")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -43,7 +42,7 @@ public class AuthController {
 
     Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    @PostMapping("/signin")
+    @PostMapping("/signin/")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         logger.info(loginRequest.getUsername() + "  " + loginRequest.getPassword());
         Authentication authentication =  authenticationManager.authenticate(
@@ -60,7 +59,7 @@ public class AuthController {
         ));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signup/")
     public ResponseEntity<?> loginUser(@Valid @RequestBody SignupRequest signupRequest) {
         if (userRepository.existsByUsernameOrEmail(
                 signupRequest.getUsername(),
@@ -79,8 +78,8 @@ public class AuthController {
         );
     }
 
-    @GetMapping("refreshtoken")
-    public  ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
+    @GetMapping("/refreshtoken/")
+    public  ResponseEntity<?> refreshToken(HttpServletRequest request) {
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
 
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
@@ -89,10 +88,6 @@ public class AuthController {
     }
 
     public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
-        Map<String, Object> expectedMap = new HashMap<String, Object>();
-        for (Entry<String, Object> entry : claims.entrySet()) {
-            expectedMap.put(entry.getKey(), entry.getValue());
-        }
-        return expectedMap;
+        return new HashMap<>(claims);
     }
 }

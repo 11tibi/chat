@@ -1,6 +1,5 @@
 package com.example.chat.payload.response;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

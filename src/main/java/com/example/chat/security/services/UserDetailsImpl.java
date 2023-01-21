@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Data
 public class UserDetailsImpl implements UserDetails {
@@ -18,8 +17,6 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
     private String imageUrl;
-
-//    private Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(long id, String username, String email, String password, String imageUrl) {
         this.id = id;

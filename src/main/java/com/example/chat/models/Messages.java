@@ -1,8 +1,10 @@
 package com.example.chat.models;
 
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "messages")
@@ -15,11 +17,15 @@ public class Messages {
     @Column(nullable = false)
     private String message;
 
-    @ManyToOne()
-    @JoinColumn(name = "senderId", updatable = false, insertable = false)
-    private User sender;
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private Date created_at;
 
-    @ManyToOne()
-    @JoinColumn(name = "receiverId", updatable = false, insertable = false)
-    private User receiver;
+    public Messages(String message) {
+        this.message = message;
+    }
+
+    public Messages() {
+
+    }
 }

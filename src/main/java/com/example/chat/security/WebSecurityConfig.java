@@ -17,8 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -41,11 +39,14 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((requests) ->
+                requests.requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/api/chat/").authenticated()
+                        .anyRequest().denyAll()
+        );
+
         http.cors().and().csrf().disable();
-        http.authorizeHttpRequests((autz) -> autz
-                .mvcMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-        ).httpBasic(withDefaults());
         return http.build();
     }
 
