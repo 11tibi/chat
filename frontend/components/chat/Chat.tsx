@@ -1,10 +1,33 @@
-import React from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+import connectToWS, {getDefaultHeaders} from "../../utils/WebsocketUtil";
 import './chat.module.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import classes from "./chat.module.css";
+import {Message} from "stompjs";
 
 const Chat = () => {
+    const [message, setMessage] = useState("");
+    let wsConnection: any = useRef();
+
+    useEffect(() => {
+        wsConnection.current = connectToWS(() => {
+            wsConnection.current.subscribe('/topic/news', (message: Message) => {
+                console.log(message);
+            })
+            console.log("wsConnection");
+            console.log(wsConnection.current);
+        });
+    }, [])
+
+    const handleSend = (e: React.MouseEvent<HTMLButtonElement>) => {
+        console.log("send");
+        console.log(wsConnection.current);
+        console.log(message);
+        wsConnection.current.send("/app/news", getDefaultHeaders(), message);
+        e.preventDefault();
+    }
+
     return (
         <div className={classes.background}>
             <div className="container py-5" style={{height: "100%"}}>
@@ -37,7 +60,7 @@ const Chat = () => {
                     </div>
 
                     <div className="col-md-6 col-lg-7 col-xl-8" style={{height: "100%"}}>
-                        <div className={`${classes.scrollable} mb-1`} style={{height: "85%", paddingRight: "20px"}}>
+                        <div className={`${classes.scrollable} mb-1`} style={{height: "95%", paddingRight: "20px"}}>
                             <ul className="list-unstyled">
                                 <li className="d-flex justify-content-between mb-4">
                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
@@ -124,10 +147,16 @@ const Chat = () => {
                             {/*    */}
                             </ul>
                         </div>
-                        <div style={{height: "15%"}}>
-                            <div className="form-outline">
-                                <textarea className="form-control" id="textAreaExample2" rows={4}
-                                          placeholder={"Message"} style={{resize: "none"}}></textarea>
+                        <div style={{height: "5%"}}>
+                            <div className="form-outline row">
+                                <div className="col-sm-10">
+                                <textarea className="form-control" id="textAreaExample2" rows={1}
+                                          placeholder={"Message"} style={{resize: "none"}}
+                                            value={message}
+                                          onChange={(e) => {setMessage((e.target.value))}}>
+                                </textarea>
+                                </div>
+                                <button className="btn btn-primary col-sm-2" onClick={handleSend}>Send</button>
                             </div>
                         </div>
                     </div>
