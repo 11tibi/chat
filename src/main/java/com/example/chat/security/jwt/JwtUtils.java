@@ -33,7 +33,7 @@ public class JwtUtils {
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(userPrincipal.getEmail())
+                .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -53,9 +53,7 @@ public class JwtUtils {
 
     public Optional<User> getUser(String token) {
         String username = getUsername(token);
-        logger.info("email " + username);
         var user = userRepository.findByEmail(username);
-        logger.info(user.toString());
         return user;
     }
 

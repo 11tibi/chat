@@ -10,5 +10,5 @@ spring:
 
 example:
   jwtSecret: secret
-  jwtExpirationMs: 108000000
-  jwtRefreshExpirationDateInMs: 109000000
+  jwtExpirationMs: 1080000000
+  jwtRefreshExpirationDateInMs: 1090000000

@@ -21,6 +21,10 @@ public class Messages {
     @Column(nullable = false, updatable = false)
     private Date created_at;
 
+    @ManyToOne()
+    @JoinColumn(name = "ConnectionId", updatable = false, nullable = false)
+    private Connection connectionId;
+
     public Messages(String message) {
         this.message = message;
     }

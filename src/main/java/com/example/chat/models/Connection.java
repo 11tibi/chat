@@ -21,18 +21,23 @@ public class Connection {
     private String connection_id;
 
     @ManyToOne()
-    @JoinColumn(name = "senderId", updatable = false, nullable = false)
-    private User sender;
+    @JoinColumn(name = "User1Id", updatable = false, nullable = false)
+    private User user1;
 
     @ManyToOne()
-    @JoinColumn(name = "receiverId", updatable = false, nullable = false)
-    private User receiver;
-
-    @ManyToOne()
-    @JoinColumn(name = "messageId", updatable = false, nullable = false, unique = true)
-    private Messages messages;
+    @JoinColumn(name = "User2Id", updatable = false, nullable = false)
+    private User user2;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Date created_at;
+
+    public Connection(User user1, User user2) {
+        this.user1 = user1;
+        this.user2 = user2;
+    }
+
+    public Connection() {
+
+    }
 }
