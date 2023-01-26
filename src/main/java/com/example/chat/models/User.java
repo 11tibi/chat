@@ -20,7 +20,7 @@ public class User {
     @Column(nullable = false, length = 40)
     private String username;
 
-    @Column(unique = true)
+    @Column()
     private String imageUrl;
 
     public User(String email, String password, String username) {

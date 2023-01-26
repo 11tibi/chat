@@ -31,7 +31,8 @@ const Login = () => {
             password: e.currentTarget.elements.password.value
         };
         AxiosInstance.post<SignInResponse>("/api/auth/signin/", data).then(response => {
-            localStorage.setItem("accessToken", response.data.token);
+            localStorage.setItem("access_token", response.data.token);
+            localStorage.setItem("uid", response.data.id.toString());
             router.push("/chat/");
         }).catch(e => {
             console.error(e.reason);

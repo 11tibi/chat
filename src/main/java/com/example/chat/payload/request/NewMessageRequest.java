@@ -12,8 +12,4 @@ public class NewMessageRequest {
     @NotNull
     @Max(255)
     private String message;
-
-    @NotBlank
-    @NotNull
-    private Long receiver;
 }

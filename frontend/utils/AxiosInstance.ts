@@ -15,7 +15,7 @@ AxiosInstance.interceptors.request.use(
         const accessToken: string | null = localStorage.getItem('access_token');
         if (accessToken) {
             config.headers = {
-                Authorization: accessToken
+                Authorization: `Bearer ${accessToken}`
             };
         }
         return config;
@@ -38,7 +38,7 @@ AxiosInstance.interceptors.response.use(
 
             return AxiosInstance(prevRequest);
         } else if (error.response.status === 403) {
-            await Router.push('/auth/login/');
+            // await Router.push('/auth/login/');
         }
         return Promise.reject(error);
     }

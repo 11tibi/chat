@@ -43,6 +43,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 requests.requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/connections/").permitAll()
+                        .requestMatchers("/api/msg/**").permitAll()
                         .requestMatchers("/api/chat/").authenticated()
                         .anyRequest().denyAll()
         );

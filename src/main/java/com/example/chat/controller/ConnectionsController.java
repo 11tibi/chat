@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/connections/")
 public class ConnectionsController {
@@ -35,13 +37,16 @@ public class ConnectionsController {
             return ResponseEntity.badRequest().build();
         } else {
             Connection newConnection = new Connection(user1, user2);
-            var connection =  connectionRepository.save(newConnection);
+            var connection = connectionRepository.save(newConnection);
             return ResponseEntity.ok(connection);
         }
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> get() {
-        return ResponseEntity.ok("");
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        List<Connection> connections = connectionRepository.findAllByUser1OrUser2(currentUser, currentUser);
+        return ResponseEntity.ok(connections);
     }
 }

@@ -1,32 +1,35 @@
 package com.example.chat.controller;
 
-import com.example.chat.security.jwt.JwtUtils;
+import com.example.chat.models.User;
+import com.example.chat.repository.MessagesRepository;
+import com.example.chat.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
-
-@Controller
-@ControllerAdvice
+@RestController
+@RequestMapping("/api/msg/")
 public class MessageController {
-    Logger logger = LoggerFactory.getLogger(MessageController.class);
+    Logger logger = LoggerFactory.getLogger(MessageWSController.class);
 
-    @Autowired JwtUtils jwtUtils;
+    @Autowired
+    UserRepository userRepository;
 
-    @MessageMapping("/news")
-    @SendTo("/topic/news")
-    public String broadcastNews(@Payload String message, SimpMessageHeaderAccessor accessor) {
-        String token = Objects.requireNonNull(accessor.getNativeHeader("Authorization")).get(0);
-        jwtUtils.validateJwtToken(token);
-        logger.info(jwtUtils.getUser(token).toString());
-        logger.warn("Message received");
-        return message;
+    @Autowired
+    MessagesRepository messagesRepository;
+
+    @GetMapping("/{id}/")
+    public ResponseEntity<?> get(@PathVariable Long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        var messages = messagesRepository.findByUsers(currentUser.getId(), id);
+        return ResponseEntity.ok(messages);
     }
 }

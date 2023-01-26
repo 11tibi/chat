@@ -51,9 +51,9 @@ public class JwtUtils {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public Optional<User> getUser(String token) {
+    public User getUser(String token) {
         String username = getUsername(token);
-        var user = userRepository.findByEmail(username);
+        var user = userRepository.findByUsername(username).orElseThrow();
         return user;
     }
 

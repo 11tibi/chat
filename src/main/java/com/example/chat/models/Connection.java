@@ -3,10 +3,9 @@ package com.example.chat.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "connection")
@@ -16,9 +15,8 @@ public class Connection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Generated(GenerationTime.INSERT)
     @Column(nullable = false, unique = true)
-    private String connection_id;
+    private String connectionId;
 
     @ManyToOne()
     @JoinColumn(name = "User1Id", updatable = false, nullable = false)
@@ -31,6 +29,11 @@ public class Connection {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Date created_at;
+
+    @PrePersist
+    public void generateConnectionId() {
+        this.connectionId = UUID.randomUUID().toString();
+    }
 
     public Connection(User user1, User user2) {
         this.user1 = user1;
