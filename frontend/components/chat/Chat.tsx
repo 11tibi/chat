@@ -100,7 +100,7 @@ const Chat = () => {
                                             <div className="d-flex justify-content-between">
                                                 { c.user1.id != currentUserId.current ?
                                                 <div className="d-flex flex-row">
-                                                <img src={c.user1.imageUrl}
+                                                <img src={process.env.NEXT_PUBLIC_API_ENDPOINT + c.user1.imageUrl}
                                                    className="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
                                                    width="60"/>
                                                 <div className="pt-1"
@@ -112,7 +112,7 @@ const Chat = () => {
                                             </div>
                                                 :
                                             <div className="d-flex justify-content-between">
-                                                <img src={c.user2.imageUrl}
+                                                <img src={process.env.NEXT_PUBLIC_API_ENDPOINT + c.user2.imageUrl}
                                                    className="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
                                                    width="60"/>
                                                 <div className="pt-1"
@@ -135,7 +135,7 @@ const Chat = () => {
 
                                 {messages.map(msg =>
                                     <li className="d-flex justify-content-between mb-4">
-                                        <img src={msg.sender.imageUrl} alt="user profile"
+                                        <img src={process.env.NEXT_PUBLIC_API_ENDPOINT + msg.sender.imageUrl} alt="user profile"
                                              className="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
                                              width="60"/>
                                         <div className="card w-100">
